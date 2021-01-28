@@ -44,8 +44,9 @@ def romanize(data):
     integerData=integerData % 5
 
     romanizedData+=romanizeStringBuilder(integerData,1,'I')
+    logging.info(romanizedData)
 
-    romanizedData+=romanizeEdgeCaseStringBuilder(romanizedData)
+    romanizedData=romanizeEdgeCaseStringBuilder(romanizedData)
 
     return romanizedData
 
