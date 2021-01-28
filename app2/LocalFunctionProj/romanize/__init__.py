@@ -11,7 +11,7 @@ def romanizeEdgeCaseStringBuilder(romanizedData):
     #Handle odd ball cases
     romanizedData = romanizedData.replace('VIV','IX')
     romanizedData = romanizedData.replace('LXL','XC')
-
+    romanizedData = romanizedData.replace('DCD','CM')
     return romanizedData
 
 def romanizeStringBuilder(integerData, divisor, romanCharacter):
