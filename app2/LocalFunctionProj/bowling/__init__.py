@@ -1,24 +1,35 @@
 import logging
-
+import json
 import azure.functions as func
 
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
+def computeScore(scorecard: str) -> int:
+    """computes a bowling score from a scorecard
 
-    name = req.params.get('name')
-    if not name:
+
+    scorecard - a complete games scorecard
+    """
+    return 10
+
+
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    logging.info("Python HTTP trigger function processed a request.")
+
+    name = req.params.get("scorecard")
+    if not scorecard:
         try:
             req_body = req.get_json()
         except ValueError:
             pass
         else:
-            name = req_body.get('name')
+            scorecard = req_body.get("scorecard")
 
     if name:
-        return func.HttpResponse(f"Hello, {name}. This HTTP triggered function executed successfully.")
+        scoreValue = computeScore(scorecard)
+        score = json.dumps({"score": scoreValue})
+        return func.HttpResponse(scoreValue)
     else:
         return func.HttpResponse(
-             "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response.",
-             status_code=200
+            "This HTTP triggered function executed successfully. Pass a 'scorecard' in the query string or in the request body to get the computeScore.",
+            status_code=200,
         )
