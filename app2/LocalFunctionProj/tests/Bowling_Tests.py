@@ -38,7 +38,7 @@ class Testing(unittest.TestCase):
         self.assertEqual(expected, result)
 
     def test_compute_5spare(self):
-        expected = 150
+        expected = 155
         result = bowling.computeScore("5/5/5/5/5/5/5/5/5/5/5")
         self.assertEqual(expected, result)
 

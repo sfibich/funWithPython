@@ -3,19 +3,49 @@ import json
 import azure.functions as func
 
 
+def computeValue(element: str) -> int:
+    if element == "X":
+        elementValue = 10
+    elif element == "/":
+        elementValue = 10
+    elif element == "-":
+        elementValue = 0
+    else:
+        elementValue = int(element)
+
+    return elementValue
+
+
 def computeScore(scorecard: str) -> int:
     """computes a bowling score from a scorecard
 
 
     scorecard - a complete games scorecard
     """
-    return 10
+
+    value = 0
+    for location in range(0, len(scorecard)):
+        element = scorecard[location]
+        elementValue = computeValue(element)
+        if location < 9:
+            if element == "X":
+                elementValue += computeValue(scorecard[location + 1])
+                elementValue += computeValue(scorecard[location + 2])
+            elif element == "/":
+                elementValue -= computeValue(scorecard[location - 1])
+                elementValue += computeValue(scorecard[location + 1])
+            else:
+                pass
+        else:
+            pass
+        value += elementValue
+    return value
 
 
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info("Python HTTP trigger function processed a request.")
 
-    name = req.params.get("scorecard")
+    scorecard = req.params.get("scorecard")
     if not scorecard:
         try:
             req_body = req.get_json()
@@ -24,12 +54,10 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         else:
             scorecard = req_body.get("scorecard")
 
-    if name:
+    if scorecard:
+        mimeType = "application/json"
         scoreValue = computeScore(scorecard)
         score = json.dumps({"score": scoreValue})
-        return func.HttpResponse(scoreValue)
+        return func.HttpResponse(body=score, mimetype=mimeType)
     else:
-        return func.HttpResponse(
-            "This HTTP triggered function executed successfully. Pass a 'scorecard' in the query string or in the request body to get the computeScore.",
-            status_code=200,
-        )
+        return func.HttpResponse(status_code=204)
